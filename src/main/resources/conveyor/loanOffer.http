@@ -1,0 +1,5 @@
+POST http://localhost:8084/conveyor/offers
+Content-Type: application/json
+{
+    "amount":10000
+}
