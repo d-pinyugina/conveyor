@@ -6,6 +6,7 @@ import ru.nf.conveyor.model.LoanApplicationRequestDTO;
  * Интерфейс сервиса для проверки входящих запросов
  */
 public interface PrescoringService {
+
 	/**
 	 * Валидация входящего запроса
 	 *
