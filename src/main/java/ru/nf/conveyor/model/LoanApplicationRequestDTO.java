@@ -36,7 +36,7 @@ public class LoanApplicationRequestDTO {
 	/**
 	 * Дата рождения
 	 */
-	private LocalDate birthdate;
+	private LocalDate birthDate;
 
 	/**
 	 * почта
