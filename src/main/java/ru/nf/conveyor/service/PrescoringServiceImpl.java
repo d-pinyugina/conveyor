@@ -57,6 +57,7 @@ public class PrescoringServiceImpl implements PrescoringService {
 
 	private boolean firstNameValidation(@NonNull String firstName) {
 		log.info("Success first name validation {}", firstName);
+		log.info("validation success");
 /**
  * Имя может содержать от 2 до 30 символов.
  * Имя может начинаться только с символа az (без учета регистра).
@@ -71,6 +72,7 @@ public class PrescoringServiceImpl implements PrescoringService {
 
 	private boolean lastNameValidation(@NonNull String lastName) {
 		log.info("Success last name validation {}", lastName);
+		log.info("validation success");
 
 		String lastNameRegex = "(?i)(^[a-z]+)[a-z .,-]((?! .,-)$){2,30}$";
 		Pattern lastNamePat = Pattern.compile(lastNameRegex, Pattern.CASE_INSENSITIVE);
@@ -80,6 +82,7 @@ public class PrescoringServiceImpl implements PrescoringService {
 
 	private boolean middleNameValidation(@NonNull String middleName) {
 		log.info("Success middle name validation {}", middleName);
+		log.info("validation success");
 
 		String middleNameRegex = "(?i)(^[a-z]+)[a-z .,-]((?! .,-)$){2,30}$";
 		Pattern middleNamePat = Pattern.compile(middleNameRegex, Pattern.CASE_INSENSITIVE);
@@ -89,8 +92,9 @@ public class PrescoringServiceImpl implements PrescoringService {
 
 	private void termValidation(@NonNull Integer term) {
 		log.info("Success term validation {}", term);
+		log.info("validation success");
 
-		if(term < 6){
+		if (term < 6) {
 			throw new IllegalArgumentException("Срок кредита указан неверно");
 		}
 	}
@@ -101,6 +105,7 @@ public class PrescoringServiceImpl implements PrescoringService {
 
 	private boolean emailValidation(@NonNull String email) {
 		log.info("Success email validation {}", email);
+		log.info("validation success");
 
 		String emailRegex = "[\\w\\.]{2,50}@[\\w\\.]{2,20}";
 		Pattern emailPat = Pattern.compile(emailRegex, Pattern.CASE_INSENSITIVE);
@@ -110,6 +115,7 @@ public class PrescoringServiceImpl implements PrescoringService {
 
 	private boolean passportSeriesValidation(@NonNull String series) {
 		log.info("Success passport series {} validation", series);
+		log.info("validation success");
 
 		String passportSeriesRegex = "^([0-9]{4})?$";
 		Pattern passportSeriesPat = Pattern.compile(passportSeriesRegex, Pattern.CASE_INSENSITIVE);
@@ -117,8 +123,9 @@ public class PrescoringServiceImpl implements PrescoringService {
 		return matcher.find();
 	}
 
-	private boolean passporNumbertValidation(@NonNull String number){
+	private boolean passporNumbertValidation(@NonNull String number) {
 		log.info("Success passport series {} validation", number);
+		log.info("validation success");
 
 		String passportNumberRegex = "^([0-9]{6})?$";
 		Pattern passportNumberPat = Pattern.compile(passportNumberRegex, Pattern.CASE_INSENSITIVE);
