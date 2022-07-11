@@ -6,6 +6,8 @@ import org.springframework.stereotype.Service;
 import ru.nf.conveyor.model.LoanApplicationRequestDTO;
 
 import java.time.LocalDate;
+import java.time.Period;
+import java.time.temporal.ChronoUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -25,6 +27,31 @@ import java.util.regex.Pattern;
 @Slf4j
 @Service
 public class PrescoringServiceImpl implements PrescoringService {
+
+	/**
+	 * Имя может содержать от 2 до 30 символов.
+	 * Имя может начинаться только с символа az (без учета регистра).
+	 * После этого имя может содержать az (без учета регистра) и ['-,.].
+	 * Имя может заканчиваться только символом az (без учета регистра).
+	 */
+	private static final String NAME_PATTERN =
+			"(?i)(^[a-z]+)[a-z .,-]((?! .,-)$){2,30}$";
+
+
+	/**
+	 * Константа, описывающая регулярное выражение для валидации email
+	 */
+	private static final String EMAIL_PATTERN = "[\\w\\.]{2,50}@[\\w\\.]{2,20}";
+
+	/**
+	 * Константа, описывающая регулярное выражение для валидации серии паспорта
+	 */
+	private static final String PASSPORT_SERIES_PATTERN = "^([0-9]{4})?$";
+
+	/**
+	 * Константа, описывающая регулярное выражение для валидации номера паспорта
+	 */
+	private static final String PASSPORT_NUMBER = "^([0-9]{6})?$";
 
 	@Override
 	public void validate(LoanApplicationRequestDTO loanApplicationRequestDTO) {
@@ -53,46 +80,44 @@ public class PrescoringServiceImpl implements PrescoringService {
 
 		passporNumbertValidation(loanApplicationRequestDTO.getPassportNumber());
 
+		log.info("validation success");
 	}
 
-	private boolean firstNameValidation(@NonNull String firstName) {
-		log.info("Success first name validation {}", firstName);
-		log.info("validation success");
-/**
- * Имя может содержать от 2 до 30 символов.
- * Имя может начинаться только с символа az (без учета регистра).
- * После этого имя может содержать az (без учета регистра) и ['-,.].
- * Имя может заканчиваться только символом az (без учета регистра).
- */
-		String firstNameRegex = "(?i)(^[a-z]+)[a-z .,-]((?! .,-)$){2,30}$";
-		Pattern firstNamePat = Pattern.compile(firstNameRegex, Pattern.CASE_INSENSITIVE);
+	private void firstNameValidation(@NonNull String firstName) {
+		log.info("first name validation {}", firstName);
+
+		Pattern firstNamePat = Pattern.compile(NAME_PATTERN, Pattern.CASE_INSENSITIVE);
 		Matcher matcher = firstNamePat.matcher(firstName);
-		return matcher.find();
+
+		if (!matcher.find()) {
+			throw new IllegalArgumentException("firstName не соответствует шаблону");
+		}
 	}
 
-	private boolean lastNameValidation(@NonNull String lastName) {
-		log.info("Success last name validation {}", lastName);
-		log.info("validation success");
+	private void lastNameValidation(@NonNull String lastName) {
+		log.info("last name validation {}", lastName);
 
-		String lastNameRegex = "(?i)(^[a-z]+)[a-z .,-]((?! .,-)$){2,30}$";
-		Pattern lastNamePat = Pattern.compile(lastNameRegex, Pattern.CASE_INSENSITIVE);
+		Pattern lastNamePat = Pattern.compile(NAME_PATTERN, Pattern.CASE_INSENSITIVE);
 		Matcher matcher = lastNamePat.matcher(lastName);
-		return matcher.find();
+
+		if (!matcher.find()) {
+			throw new IllegalArgumentException("lastName не соответствует шаблону");
+		}
 	}
 
-	private boolean middleNameValidation(@NonNull String middleName) {
-		log.info("Success middle name validation {}", middleName);
-		log.info("validation success");
+	private void middleNameValidation(@NonNull String middleName) {
+		log.info("middle name validation {}", middleName);
 
-		String middleNameRegex = "(?i)(^[a-z]+)[a-z .,-]((?! .,-)$){2,30}$";
-		Pattern middleNamePat = Pattern.compile(middleNameRegex, Pattern.CASE_INSENSITIVE);
+		Pattern middleNamePat = Pattern.compile(NAME_PATTERN, Pattern.CASE_INSENSITIVE);
 		Matcher matcher = middleNamePat.matcher(middleName);
-		return matcher.find();
+
+		if (!matcher.find()) {
+			throw new IllegalArgumentException("middleName не соответствует шаблону");
+		}
 	}
 
 	private void termValidation(@NonNull Integer term) {
-		log.info("Success term validation {}", term);
-		log.info("validation success");
+		log.info("term validation {}", term);
 
 		if (term < 6) {
 			throw new IllegalArgumentException("Срок кредита указан неверно");
@@ -100,36 +125,45 @@ public class PrescoringServiceImpl implements PrescoringService {
 	}
 
 	private void birthDateValidation(@NonNull LocalDate birthDate) {
-		log.info("Success birth date validation {}", birthDate);
+		log.info("birth date validation {}", birthDate);
+		Period between = Period.between(birthDate, LocalDate.now());
+		int years = between.getYears();
+
+		if (years < 18) {
+			throw new IllegalArgumentException("birth date не соответствует требованиям. Вам должно быть 18 лет!");
+		}
 	}
 
-	private boolean emailValidation(@NonNull String email) {
-		log.info("Success email validation {}", email);
-		log.info("validation success");
+	private void emailValidation(@NonNull String email) {
+		log.info("email validation {}", email);
 
-		String emailRegex = "[\\w\\.]{2,50}@[\\w\\.]{2,20}";
-		Pattern emailPat = Pattern.compile(emailRegex, Pattern.CASE_INSENSITIVE);
+		Pattern emailPat = Pattern.compile(EMAIL_PATTERN, Pattern.CASE_INSENSITIVE);
 		Matcher matcher = emailPat.matcher(email);
-		return matcher.find();
+
+		if (!matcher.find()) {
+			throw new IllegalArgumentException("email не соответствует шаблону");
+		}
 	}
 
-	private boolean passportSeriesValidation(@NonNull String series) {
-		log.info("Success passport series {} validation", series);
-		log.info("validation success");
+	private void passportSeriesValidation(@NonNull String series) {
+		log.info("passport series {} validation", series);
 
-		String passportSeriesRegex = "^([0-9]{4})?$";
-		Pattern passportSeriesPat = Pattern.compile(passportSeriesRegex, Pattern.CASE_INSENSITIVE);
+		Pattern passportSeriesPat = Pattern.compile(PASSPORT_SERIES_PATTERN, Pattern.CASE_INSENSITIVE);
 		Matcher matcher = passportSeriesPat.matcher(series);
-		return matcher.find();
+
+		if (!matcher.find()) {
+			throw new IllegalArgumentException("passportSeries не соответствует шаблону");
+		}
 	}
 
-	private boolean passporNumbertValidation(@NonNull String number) {
+	private void passporNumbertValidation(@NonNull String number) {
 		log.info("Success passport series {} validation", number);
-		log.info("validation success");
 
-		String passportNumberRegex = "^([0-9]{6})?$";
-		Pattern passportNumberPat = Pattern.compile(passportNumberRegex, Pattern.CASE_INSENSITIVE);
+		Pattern passportNumberPat = Pattern.compile(PASSPORT_NUMBER, Pattern.CASE_INSENSITIVE);
 		Matcher matcher = passportNumberPat.matcher(number);
-		return matcher.find();
+
+		if (!matcher.find()) {
+			throw new IllegalArgumentException("passportSeries не соответствует шаблону");
+		}
 	}
 }
