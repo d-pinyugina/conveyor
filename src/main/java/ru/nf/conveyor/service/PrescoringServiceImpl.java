@@ -8,7 +8,6 @@ import ru.nf.conveyor.model.LoanApplicationRequestDTO;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.Period;
-import java.time.temporal.ChronoUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -43,6 +42,11 @@ public class PrescoringServiceImpl implements PrescoringService {
 	 * Константа, описывающая регулярное выражение для валидации email
 	 */
 	private static final String EMAIL_PATTERN = "[\\w\\.]{2,50}@[\\w\\.]{2,20}";
+
+	/**
+	 * Константа минимального значения суммы кредита
+	 */
+	private static final BigDecimal MIN_AMOUNT = new BigDecimal("10000");
 
 	/**
 	 * Константа, описывающая регулярное выражение для валидации серии паспорта
@@ -123,9 +127,7 @@ public class PrescoringServiceImpl implements PrescoringService {
 	private void amountValidation(@NonNull BigDecimal amount) {
 		log.info("Amount validation {}", amount);
 
-		BigDecimal amountMin = new BigDecimal("10000");
-
-		if (amount.compareTo(amountMin) < 0) {
+		if (amount.compareTo(MIN_AMOUNT) < 0) {
 			throw new IllegalArgumentException("amount меньше 10000");
 		}
 	}
