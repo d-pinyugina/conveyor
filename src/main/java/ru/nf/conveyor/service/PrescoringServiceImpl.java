@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.nf.conveyor.model.LoanApplicationRequestDTO;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.temporal.ChronoUnit;
@@ -66,6 +67,9 @@ public class PrescoringServiceImpl implements PrescoringService {
 		//проверка отчества (при наличии - от 2 до 30 латинских букв)
 		middleNameValidation(loanApplicationRequestDTO.getMiddleName());
 
+		// проверка суммы кредита
+		amountValidation(loanApplicationRequestDTO.getAmount());
+
 		//проверка срока кредита (целое число, большее или равное 6)
 		termValidation(loanApplicationRequestDTO.getTerm());
 
@@ -78,7 +82,7 @@ public class PrescoringServiceImpl implements PrescoringService {
 		//проверка серии паспорта (4 цифры), номера паспорта (6 цифр)
 		passportSeriesValidation(loanApplicationRequestDTO.getPassportSeries());
 
-		passporNumbertValidation(loanApplicationRequestDTO.getPassportNumber());
+		passportNumberValidation(loanApplicationRequestDTO.getPassportNumber());
 
 		log.info("validation success");
 	}
@@ -113,6 +117,16 @@ public class PrescoringServiceImpl implements PrescoringService {
 
 		if (!matcher.find()) {
 			throw new IllegalArgumentException("middleName не соответствует шаблону");
+		}
+	}
+
+	private void amountValidation(@NonNull BigDecimal amount) {
+		log.info("Amount validation {}", amount);
+
+		BigDecimal amountMin = new BigDecimal("10000");
+
+		if (amount.compareTo(amountMin) < 0) {
+			throw new IllegalArgumentException("amount меньше 10000");
 		}
 	}
 
@@ -156,7 +170,7 @@ public class PrescoringServiceImpl implements PrescoringService {
 		}
 	}
 
-	private void passporNumbertValidation(@NonNull String number) {
+	private void passportNumberValidation(@NonNull String number) {
 		log.info("Success passport series {} validation", number);
 
 		Pattern passportNumberPat = Pattern.compile(PASSPORT_NUMBER, Pattern.CASE_INSENSITIVE);
