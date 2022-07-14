@@ -5,9 +5,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.nf.conveyor.model.LoanApplicationRequestDTO;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.Period;
-import java.time.temporal.ChronoUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -44,6 +44,11 @@ public class PrescoringServiceImpl implements PrescoringService {
 	private static final String EMAIL_PATTERN = "[\\w\\.]{2,50}@[\\w\\.]{2,20}";
 
 	/**
+	 * Константа минимального значения суммы кредита
+	 */
+	private static final BigDecimal MIN_AMOUNT = new BigDecimal("10000");
+
+	/**
 	 * Константа, описывающая регулярное выражение для валидации серии паспорта
 	 */
 	private static final String PASSPORT_SERIES_PATTERN = "^([0-9]{4})?$";
@@ -66,6 +71,9 @@ public class PrescoringServiceImpl implements PrescoringService {
 		//проверка отчества (при наличии - от 2 до 30 латинских букв)
 		middleNameValidation(loanApplicationRequestDTO.getMiddleName());
 
+		// проверка суммы кредита
+		amountValidation(loanApplicationRequestDTO.getAmount());
+
 		//проверка срока кредита (целое число, большее или равное 6)
 		termValidation(loanApplicationRequestDTO.getTerm());
 
@@ -78,7 +86,7 @@ public class PrescoringServiceImpl implements PrescoringService {
 		//проверка серии паспорта (4 цифры), номера паспорта (6 цифр)
 		passportSeriesValidation(loanApplicationRequestDTO.getPassportSeries());
 
-		passporNumbertValidation(loanApplicationRequestDTO.getPassportNumber());
+		passportNumberValidation(loanApplicationRequestDTO.getPassportNumber());
 
 		log.info("validation success");
 	}
@@ -113,6 +121,14 @@ public class PrescoringServiceImpl implements PrescoringService {
 
 		if (!matcher.find()) {
 			throw new IllegalArgumentException("middleName не соответствует шаблону");
+		}
+	}
+
+	private void amountValidation(@NonNull BigDecimal amount) {
+		log.info("Amount validation {}", amount);
+
+		if (amount.compareTo(MIN_AMOUNT) < 0) {
+			throw new IllegalArgumentException("amount меньше " + MIN_AMOUNT);
 		}
 	}
 
@@ -156,14 +172,14 @@ public class PrescoringServiceImpl implements PrescoringService {
 		}
 	}
 
-	private void passporNumbertValidation(@NonNull String number) {
+	private void passportNumberValidation(@NonNull String number) {
 		log.info("Success passport series {} validation", number);
 
 		Pattern passportNumberPat = Pattern.compile(PASSPORT_NUMBER, Pattern.CASE_INSENSITIVE);
 		Matcher matcher = passportNumberPat.matcher(number);
 
 		if (!matcher.find()) {
-			throw new IllegalArgumentException("passportSeries не соответствует шаблону");
+			throw new IllegalArgumentException("passportNumber не соответствует шаблону");
 		}
 	}
 }
