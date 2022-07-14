@@ -128,7 +128,7 @@ public class PrescoringServiceImpl implements PrescoringService {
 		log.info("Amount validation {}", amount);
 
 		if (amount.compareTo(MIN_AMOUNT) < 0) {
-			throw new IllegalArgumentException("amount меньше 10000");
+			throw new IllegalArgumentException("amount меньше " + MIN_AMOUNT);
 		}
 	}
 
@@ -179,7 +179,7 @@ public class PrescoringServiceImpl implements PrescoringService {
 		Matcher matcher = passportNumberPat.matcher(number);
 
 		if (!matcher.find()) {
-			throw new IllegalArgumentException("passportSeries не соответствует шаблону");
+			throw new IllegalArgumentException("passportNumber не соответствует шаблону");
 		}
 	}
 }
