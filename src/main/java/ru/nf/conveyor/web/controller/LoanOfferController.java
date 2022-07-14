@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.nf.conveyor.model.LoanApplicationRequestDTO;
 import ru.nf.conveyor.model.LoanOfferDTO;
+import ru.nf.conveyor.service.CalculationLoanService;
 import ru.nf.conveyor.service.PrescoringService;
 
 import java.util.List;
@@ -24,6 +25,11 @@ public class LoanOfferController implements LoanOfferApi {
 	private final PrescoringService prescoringService;
 
 	/**
+	 * Сервис для расчета кредитных предложений
+	 */
+	private final CalculationLoanService calculationLoanService;
+
+	/**
 	 * Метод для получения кредитных предложений
 	 */
 	@Override
@@ -32,9 +38,7 @@ public class LoanOfferController implements LoanOfferApi {
 
 		//прекскоринг
 		prescoringService.validate(loanApplicationRequestDTO);
-		// маппинг
-		LoanOfferDTO loanOfferDTO = new LoanOfferDTO();
-		loanOfferDTO.setIsSalaryClient(true);
-		return List.of(loanOfferDTO);
+
+		return calculationLoanService.calcLoan(loanApplicationRequestDTO);
 	}
 }
