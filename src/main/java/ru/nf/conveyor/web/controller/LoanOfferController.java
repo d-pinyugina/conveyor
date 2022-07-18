@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.nf.conveyor.model.LoanApplicationRequestDTO;
 import ru.nf.conveyor.model.LoanOfferDTO;
 import ru.nf.conveyor.service.CalculationLoanService;
+import ru.nf.conveyor.service.LoanOfferBusinessOperationService;
 import ru.nf.conveyor.service.PrescoringService;
 
 import java.util.List;
@@ -19,15 +20,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class LoanOfferController implements LoanOfferApi {
 
-	/**
-	 * Сервис для работы с прескорингом
-	 */
-	private final PrescoringService prescoringService;
-
-	/**
-	 * Сервис для расчета кредитных предложений
-	 */
-	private final CalculationLoanService calculationLoanService;
+	private final LoanOfferBusinessOperationService loanOfferBusinessOperationService;
 
 	/**
 	 * Метод для получения кредитных предложений
@@ -36,9 +29,6 @@ public class LoanOfferController implements LoanOfferApi {
 	public List<LoanOfferDTO> offers(LoanApplicationRequestDTO loanApplicationRequestDTO) {
 		log.info("LoanApplicationRequestDTO: {}", loanApplicationRequestDTO);
 
-		//прекскоринг
-		prescoringService.validate(loanApplicationRequestDTO);
-
-		return calculationLoanService.calcLoan(loanApplicationRequestDTO);
+		return loanOfferBusinessOperationService.offers(loanApplicationRequestDTO);
 	}
 }
