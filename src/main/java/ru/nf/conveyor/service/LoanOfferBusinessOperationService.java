@@ -11,5 +11,10 @@ import java.util.List;
 
 public interface LoanOfferBusinessOperationService {
 
-	List<LoanOfferDTO> offers (LoanApplicationRequestDTO loanApplicationRequestDTO);
+	/**
+	 * Метод, который возвращает операции по кредитным предложениям
+	 *
+	 * @param loanApplicationRequestDTO запрос
+	 */
+	List<LoanOfferDTO> offers(LoanApplicationRequestDTO loanApplicationRequestDTO);
 }

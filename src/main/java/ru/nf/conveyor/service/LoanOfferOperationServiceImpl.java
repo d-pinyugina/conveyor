@@ -8,10 +8,14 @@ import ru.nf.conveyor.model.LoanOfferDTO;
 
 import java.util.List;
 
+/**
+ * Сервис операций кредитных предложений
+ */
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class LoanOfferOperationServiceImpl implements LoanOfferBusinessOperationService{
+public class LoanOfferOperationServiceImpl implements LoanOfferBusinessOperationService {
 
 	/**
 	 * Сервис для работы с прескорингом

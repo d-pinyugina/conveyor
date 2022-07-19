@@ -2,13 +2,11 @@ package ru.nf.conveyor.web.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RestController;
+import ru.nf.conveyor.configuration.properties.ConveyorProperties;
 import ru.nf.conveyor.model.LoanApplicationRequestDTO;
 import ru.nf.conveyor.model.LoanOfferDTO;
-import ru.nf.conveyor.service.CalculationLoanService;
 import ru.nf.conveyor.service.LoanOfferBusinessOperationService;
-import ru.nf.conveyor.service.PrescoringService;
 
 import java.util.List;
 
@@ -20,6 +18,9 @@ import java.util.List;
 @RequiredArgsConstructor
 public class LoanOfferController implements LoanOfferApi {
 
+	/**
+	 * Сервис операций кредитных предложений
+	 */
 	private final LoanOfferBusinessOperationService loanOfferBusinessOperationService;
 
 	/**
