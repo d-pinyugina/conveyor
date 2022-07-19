@@ -2,11 +2,11 @@ package ru.nf.conveyor.web.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RestController;
+import ru.nf.conveyor.configuration.properties.ConveyorProperties;
 import ru.nf.conveyor.model.LoanApplicationRequestDTO;
 import ru.nf.conveyor.model.LoanOfferDTO;
-import ru.nf.conveyor.service.PrescoringService;
+import ru.nf.conveyor.service.LoanOfferBusinessOperationService;
 
 import java.util.List;
 
@@ -19,9 +19,9 @@ import java.util.List;
 public class LoanOfferController implements LoanOfferApi {
 
 	/**
-	 * Сервис для работы с прескорингом
+	 * Сервис операций кредитных предложений
 	 */
-	private final PrescoringService prescoringService;
+	private final LoanOfferBusinessOperationService loanOfferBusinessOperationService;
 
 	/**
 	 * Метод для получения кредитных предложений
@@ -30,11 +30,6 @@ public class LoanOfferController implements LoanOfferApi {
 	public List<LoanOfferDTO> offers(LoanApplicationRequestDTO loanApplicationRequestDTO) {
 		log.info("LoanApplicationRequestDTO: {}", loanApplicationRequestDTO);
 
-		//прекскоринг
-		prescoringService.validate(loanApplicationRequestDTO);
-		// маппинг
-		LoanOfferDTO loanOfferDTO = new LoanOfferDTO();
-		loanOfferDTO.setIsSalaryClient(true);
-		return List.of(loanOfferDTO);
+		return loanOfferBusinessOperationService.offers(loanApplicationRequestDTO);
 	}
 }
