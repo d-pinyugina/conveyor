@@ -14,9 +14,9 @@ public class ConveyorProperties {
 	/**
 	 * Константа для базовой кредитной ставки
 	 */
-	private final BigDecimal baseRate;
+	private final Double baseRate;
 
-	public ConveyorProperties(BigDecimal baseRate) {
+	public ConveyorProperties(Double baseRate) {
 		this.baseRate = baseRate;
 	}
 }

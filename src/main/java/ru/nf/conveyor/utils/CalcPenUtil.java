@@ -15,6 +15,6 @@ public class CalcPenUtil {
 	 */
 	public static Double calcPen(Double amount, Double monthRate, Integer period) {
 
-		return amount * monthRate / (1 - (Math.pow(1 + monthRate, (-1) * period)));
+		return Math.ceil(amount * monthRate / (1 - (Math.pow(1 + monthRate, (-1) * period))));
 	}
 }
