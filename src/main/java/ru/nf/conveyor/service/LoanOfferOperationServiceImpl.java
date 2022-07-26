@@ -34,8 +34,6 @@ public class LoanOfferOperationServiceImpl implements LoanOfferBusinessOperation
 		prescoringService.validate(loanApplicationRequestDTO);
 
 		// расчет кредитных предложений
-		calculationLoanService.calcLoan(loanApplicationRequestDTO);
-
 		return calculationLoanService.calcLoan(loanApplicationRequestDTO);
 	}
 }

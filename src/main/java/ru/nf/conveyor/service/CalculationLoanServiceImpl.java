@@ -6,8 +6,10 @@ import org.springframework.stereotype.Service;
 import ru.nf.conveyor.configuration.properties.ConveyorProperties;
 import ru.nf.conveyor.model.LoanApplicationRequestDTO;
 import ru.nf.conveyor.model.LoanOfferDTO;
+import ru.nf.conveyor.service.algorithms.CalcLoanAlgBase;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Сервис для расчета кредитных предложений
@@ -18,8 +20,10 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CalculationLoanServiceImpl implements CalculationLoanService {
 
-
-	private final ConveyorProperties properties;
+	/**
+	 * Сервис для расчета кредитных предложений
+	 */
+	private final List<CalcLoanAlgBase> calcLoanAlgBaseList;
 
 	/**
 	 * На основании LoanApplicationRequestDTO происходит прескоринг (п.5.1)
@@ -40,56 +44,8 @@ public class CalculationLoanServiceImpl implements CalculationLoanService {
 		// 2 isSalaryClient = false, isInsuranceEnabled = true
 		// 3 isSalaryClient = true, isInsuranceEnabled = false
 		// 4 isSalaryClient = true, isInsuranceEnabled = true
-		return null;
-	}
 
-	private LoanOfferDTO getLoanOfferDTOByAlg1(LoanApplicationRequestDTO request) {
-		LoanOfferDTO loanOfferDTO = new LoanOfferDTO();
-		loanOfferDTO.setIsSalaryClient(false);
-		loanOfferDTO.setIsInsuranceEnabled(false);
-		// расчет кредитной ставки
-
-		return loanOfferDTO;
-	}
-
-	private LoanOfferDTO getLoanOfferDTOByAlg2(LoanApplicationRequestDTO request) {
-		LoanOfferDTO loanOfferDTO = new LoanOfferDTO();
-		loanOfferDTO.setIsSalaryClient(false);
-		loanOfferDTO.setIsInsuranceEnabled(true);
-		// расчет кредитной ставки
-
-		return loanOfferDTO;
-	}
-
-	private LoanOfferDTO getLoanOfferDTOByAlg3(LoanApplicationRequestDTO request) {
-		LoanOfferDTO loanOfferDTO = new LoanOfferDTO();
-		loanOfferDTO.setIsSalaryClient(true);
-		loanOfferDTO.setIsInsuranceEnabled(false);
-		// расчет кредитной ставки
-
-		return loanOfferDTO;
-	}
-
-	private LoanOfferDTO getLoanOfferDTOByAlg4(LoanApplicationRequestDTO request) {
-		LoanOfferDTO loanOfferDTO = new LoanOfferDTO();
-		loanOfferDTO.setIsSalaryClient(true);
-		loanOfferDTO.setIsInsuranceEnabled(true);
-		// расчет кредитной ставки --> базовая ставка 15%
-		loanOfferDTO.setRate(properties.getBaseRate());
-
-		return loanOfferDTO;
-	}
-
-	/**
-	 * Метод для расчета ежемесячного платежа
-	 *
-	 * @param amount    сумма кредита
-	 * @param monthRate процентная ставка за месяц
-	 * @param period    период
-	 * @return платеж
-	 */
-	private Double calcPen(Double amount, Double monthRate, Integer period) {
-
-		return amount * monthRate / (1 - (Math.pow(1 + monthRate, (-1) * period)));
+		return calcLoanAlgBaseList.stream()
+				.map(calcLoanAlgBase -> calcLoanAlgBase.getLoanOffer(request)).collect(Collectors.toList());
 	}
 }

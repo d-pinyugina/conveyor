@@ -11,6 +11,9 @@ import java.math.BigDecimal;
 @ConfigurationProperties("conveyor")
 public class ConveyorProperties {
 
+	/**
+	 * Константа для базовой кредитной ставки
+	 */
 	private final BigDecimal baseRate;
 
 	public ConveyorProperties(BigDecimal baseRate) {
