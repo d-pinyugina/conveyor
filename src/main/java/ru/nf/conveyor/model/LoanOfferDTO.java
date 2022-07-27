@@ -3,6 +3,7 @@ package ru.nf.conveyor.model;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.time.temporal.TemporalAmount;
 
 /**
  * Класс кредитных предложений

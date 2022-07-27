@@ -46,7 +46,7 @@ public class PrescoringServiceImpl implements PrescoringService {
 	/**
 	 * Константа минимального значения суммы кредита
 	 */
-	private static final BigDecimal MIN_AMOUNT = new BigDecimal("10000");
+	private static final Double MIN_AMOUNT = 10000.00;
 
 	/**
 	 * Константа, описывающая регулярное выражение для валидации серии паспорта
@@ -124,7 +124,7 @@ public class PrescoringServiceImpl implements PrescoringService {
 		}
 	}
 
-	private void amountValidation(@NonNull BigDecimal amount) {
+	private void amountValidation(@NonNull Double amount) {
 		log.info("Amount validation {}", amount);
 
 		if (amount.compareTo(MIN_AMOUNT) < 0) {
