@@ -26,7 +26,7 @@ public class LoanApplicationRequestDTO {
 	/**
 	 * Сумма кредита
 	 */
-	private BigDecimal amount;
+	private Double amount;
 
 	/**
 	 * Срок кредита

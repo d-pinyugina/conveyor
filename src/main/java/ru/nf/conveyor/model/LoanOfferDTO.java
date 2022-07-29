@@ -3,6 +3,7 @@ package ru.nf.conveyor.model;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.time.temporal.TemporalAmount;
 
 /**
  * Класс кредитных предложений
@@ -17,12 +18,12 @@ public class LoanOfferDTO {
 	/**
 	 * Запрашиваемая сумма
 	 */
-	private BigDecimal requestedAmount;
+	private Double requestedAmount;
 
 	/**
 	 * Общая сумма
 	 */
-	private BigDecimal totalAmount;
+	private Double totalAmount;
 
 	/**
 	 * Срок кредита
@@ -32,12 +33,12 @@ public class LoanOfferDTO {
 	/**
 	 * Ежемесячный платеж
 	 */
-	private BigDecimal monthlyPayment;
+	private Double monthlyPayment;
 
 	/**
 	 * Ставка
 	 */
-	private BigDecimal rate;
+	private Double rate;
 
 	/**
 	 * Включена страховка?
